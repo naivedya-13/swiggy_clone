@@ -13,7 +13,7 @@ import Shimmer from "./components/shimmer";
 import Instamart from "./components/Instamart";
 import UserContext from "../utils/UserContext";
 import { Provider } from "react-redux";
-import Cart from "./components/cart";
+import Cart from "./components/Cart";
 import store from "../utils/store";
 
 const AppLayout = () => {
