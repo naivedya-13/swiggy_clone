@@ -1,0 +1,75 @@
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { IMG_CDN_LINK } from "./constant";
+const RestrauntMenu = () => {
+  const { id } = useParams();
+
+  const [restaurant, setRestaurant] = useState({});
+
+  useEffect(() => {
+    getRestaurantInfo();
+  }, []);
+
+  async function getRestaurantInfo() {
+    const data = await fetch(
+      "https://www.swiggy.com/dapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=19.1394188&lng=72.9223861&restaurantId=254571&catalog_qa=undefined&isMenuUx4=true&submitAction=ENTER"
+    );
+
+    const json = await data.json();
+    console.log(json);
+    setRestaurant(json.data.cards);
+
+    console.log(json?.data?.cards);
+  }
+  return (
+    <div>
+      <div className="menuDiv">
+        <h1>Restaurant id :{id}</h1>
+
+        <img
+          src={IMG_CDN_LINK + restaurant[2]?.card.card.info?.cloudinaryImageId}
+          className="menuimg"
+        />
+        <h1>{restaurant?.name}</h1>
+        <h2>cost for two : {restaurant[2]?.card.card.info?.costForTwo}</h2>
+        <h3>avgRating : {restaurant[2]?.card.card.info?.avgRating}</h3>
+        {/* <h3>{restaurant?.cuisines}</h3> */}
+
+        {restaurant[2]?.card.card.info?.cuisines && (
+          <h4>{restaurant[2]?.card.card.info?.cuisines.join(" , ")}</h4>
+        )}
+        <h3>City: {restaurant[2]?.card.card.info?.city}</h3>
+      </div>
+
+      <div className="list-menu">
+        <h1>
+          {
+            restaurant[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card
+              ?.card?.itemCards[0].card?.info?.name
+          }
+        </h1>
+
+        <ul>
+          {Object.values(
+            restaurant[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card
+              ?.card?.itemCards
+          ).map((item) => (
+            <div className="menu">
+              <li key={item?.card?.info?.id}>{item?.card?.info?.name}</li>
+              <img src={IMG_CDN_LINK + item?.card?.info?.imageId} alt="" />
+            </div>
+          ))}
+        </ul>
+
+        {console.log(
+          Object.values(
+            restaurant[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card
+              ?.card?.itemCards
+          )
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default RestrauntMenu;
